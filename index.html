@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>يومية الصندوق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--ink:#17212f;--muted:#66738a;--line:#e2e8f0;--brand:#0f766e;--brand2:#115e59;--in:#15803d;--inbg:#e7f6ec;--out:#b91c1c;--outbg:#fdeceb;--blue-bg:#e8effd;--warn:#b45309;--warnbg:#fff7e0;--r:14px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 'Cairo','Segoe UI',Tahoma,Arial,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button:disabled{opacity:.55;cursor:not-allowed}
+.top{background:linear-gradient(135deg,#0b4f4a,#0f766e);color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.top-in{max-width:1240px;margin:auto;padding:10px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.brand h1{margin:0;font-size:18px;line-height:1.25}
+.brand small{opacity:.8;font-size:12px}
+.tabs{display:flex;gap:6px;margin-inline-start:auto}
+.tabs button{background:transparent;border:0;color:#d7f3ef;padding:8px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+.tabs button.on{background:#fff;color:var(--brand2)}
+.tabs button:not(.on):hover{background:rgba(255,255,255,.14)}
+.userbar{display:flex;align-items:center;gap:6px;font-size:13px;flex-wrap:wrap}
+.userbar .who{background:rgba(255,255,255,.16);padding:3px 12px;border-radius:99px;font-weight:600}
+.userbar .btn{background:rgba(255,255,255,.14);border-color:transparent;color:#fff}
+.userbar .btn:hover{background:rgba(255,255,255,.28)}
+main{max-width:1240px;margin:20px auto;padding:0 18px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 3px rgba(20,30,50,.05);margin-bottom:16px}
+.pad{padding:18px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line)}
+.card-h h2,.pad h2{margin:0;font-size:17px}
+.pad h2{margin-bottom:12px}
+.pad .card-h{padding:0 0 12px;border:0}
+.pad .card-h h2{margin:0}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.toolbar .sp{flex:1}
+.datenav{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:5px}
+.datenav input{border:0;background:transparent;padding:6px 8px;font-weight:700;outline:none;width:auto}
+.dayname{font-weight:700;color:var(--brand2);padding:0 6px}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover:not(:disabled){background:#f3f6fa}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover:not(:disabled){background:var(--brand2)}
+.btn.in{background:var(--in);border-color:var(--in);color:#fff}
+.btn.out{background:var(--out);border-color:var(--out);color:#fff}
+.btn.in:hover,.btn.out:hover{filter:brightness(.92)}
+.btn.danger{color:var(--out)}
+.btn.warn{color:var(--warn);border-color:#f2d9a6;background:var(--warnbg)}
+.btn.warn:hover:not(:disabled){background:#ffefc2}
+.btn.sm{padding:2px 9px;font-size:13px;border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 18px;border-inline-start:6px solid #94a3b8}
+.stat span{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.stat strong{font-size:24px;font-weight:800;line-height:1.5}
+.stat small{font-size:13px;font-weight:600;color:var(--muted)}
+.s-open{border-inline-start-color:#2563eb}.s-open strong{color:#1e3a8a}
+.s-in{border-inline-start-color:var(--in)}.s-in strong{color:var(--in)}
+.s-out{border-inline-start-color:var(--out)}.s-out strong{color:var(--out)}
+.s-zero{border-inline-start-color:#d97706;background:var(--warnbg)}.s-zero strong{color:var(--warn)}
+.s-close{background:linear-gradient(135deg,#0b4f4a,#0f766e);border-color:#0b4f4a}
+.s-close span,.s-close strong,.s-close small{color:#fff}
+.neg{color:var(--out)}.s-close .neg{color:#fecaca}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.grid .span2{grid-column:span 2}
+@media(max-width:640px){.grid .span2{grid-column:auto}}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:#415066}
+input,select{border:1px solid #cdd6e2;background:#fff;border-radius:10px;padding:9px 11px;outline:none;width:100%}
+input:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+input:disabled{background:#f3f6fa;color:#66738a}
+.ltr{direction:ltr;text-align:right}
+.chk{flex-direction:row;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.chk input{width:auto}
+.seg{display:inline-flex;background:#eef2f6;border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;padding:6px 18px;border-radius:9px;cursor:pointer;font-weight:700;color:#475569}
+.seg button.on.in{background:var(--in);color:#fff}
+.seg button.on.out{background:var(--out);color:#fff}
+.form-actions{display:flex;gap:10px;margin-top:14px}
+#formCard{border-top:4px solid var(--in)}
+#formCard.t-out{border-top-color:var(--out)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px}
+th{background:#f4f7fa;font-weight:700;font-size:13px;color:#415066;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #eef2f6;vertical-align:middle}
+tbody tr:hover{background:#fafcfe}
+tr.open td{background:var(--blue-bg);font-weight:700;color:#1e3a8a}
+tr.zero td{background:var(--warnbg)}
+tfoot td{background:#f4f7fa;font-weight:800;border-top:2px solid var(--line);border-bottom:0}
+.num{direction:ltr;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.in-c{color:var(--in);font-weight:700}.out-c{color:var(--out);font-weight:700}
+.tag{display:inline-block;padding:0 10px;border-radius:99px;font-size:12px;background:#eef2f6;color:#475569;white-space:nowrap;margin:1px 0}
+.tag.adm{background:#fff4d6;color:#8a5a00}
+.tag.off{background:var(--outbg);color:var(--out)}
+.tag.on{background:var(--inbg);color:var(--in)}
+.badge{display:inline-block;padding:0 10px;border-radius:8px;font-weight:700;font-size:13px;white-space:nowrap}
+.badge.in{background:var(--inbg);color:var(--in)}.badge.out{background:var(--outbg);color:var(--out)}.badge.zero{background:#fde9b8;color:var(--warn)}
+.mut{color:#a3adbd}
+.rowact{white-space:nowrap}
+.rowact .btn{margin-inline-end:4px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.search{max-width:240px}
+.hint{color:var(--muted);font-size:13px;margin:10px 0 0}
+.catbox h3{margin:0 0 8px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:34px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#eef2f6;border-radius:99px;padding:2px 4px 2px 12px;font-size:13px}
+.chip button{border:0;background:#d6dde7;color:#475569;width:20px;height:20px;border-radius:50%;cursor:pointer;line-height:1}
+.chip button:hover{background:var(--out);color:#fff}
+.addrow{display:flex;gap:8px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btnrow select{width:auto;min-width:200px}
+.filters{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.filters label{min-width:150px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.fundbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.fund{border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 18px;cursor:pointer;text-align:right;display:flex;flex-direction:column;line-height:1.35;min-width:160px}
+.fund b{font-size:14px}
+.fund span{font-size:13px;color:var(--muted);font-weight:600}
+.fund:hover{border-color:#9bd3cc}
+.fund.on{border-color:var(--brand);background:#e6f6f4;box-shadow:0 2px 8px rgba(15,118,110,.18)}
+.fund.on b{color:var(--brand2)}
+.note{background:var(--warnbg);border:1px solid #f2d9a6;color:#7a4a05;border-radius:12px;padding:12px 16px;margin-bottom:16px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);background:#1b2433;color:#fff;padding:10px 22px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:300;font-weight:600;max-width:92vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:var(--out)}
+.loadbar{position:fixed;top:0;left:0;right:0;height:3px;z-index:400;display:none;background:linear-gradient(90deg,transparent,#5eead4,transparent);background-size:50% 100%;background-repeat:no-repeat;animation:lb 1s linear infinite}
+body.busy .loadbar{display:block}
+@keyframes lb{from{background-position:-50% 0}to{background-position:150% 0}}
+
+/* ---------- الشاشات: تحميل / دخول / إعداد الربط ---------- */
+#auth,#splash,#cfg{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0b4f4a,#0f766e)}
+body[data-view=auth] #auth,body[data-view=splash] #splash,body[data-view=config] #cfg{display:flex}
+body:not([data-view=app]) .top,body:not([data-view=app]) main{display:none!important}
+#splash{flex-direction:column;gap:14px;color:#fff;font-weight:700;font-size:18px;text-align:center}
+#splash .btn{color:var(--ink)}
+.auth-box{background:#fff;border-radius:18px;padding:28px;width:100%;max-width:430px;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.auth-logo{width:52px;height:52px;border-radius:14px;background:var(--brand);display:grid;place-items:center;margin-bottom:12px}
+.auth-box h1{margin:0 0 4px;font-size:22px}
+.auth-box>p,.auth-box form>p{margin:0 0 16px;color:var(--muted);font-size:14px}
+.auth-box label{margin-bottom:12px}
+.auth-box .btn{width:100%;justify-content:center;padding:10px;font-size:16px}
+.auth-err{color:var(--out);font-weight:700;min-height:24px;margin:2px 0 6px;font-size:14px}
+.auth-box ol{padding-inline-start:20px;line-height:2}
+.auth-box code{direction:ltr;unicode-bidi:embed;background:#eef2f6;padding:0 6px;border-radius:6px}
+
+/* ---------- النوافذ ---------- */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:22px;width:100%;max-width:440px;max-height:92vh;overflow:auto}
+.modal-box.wide{max-width:680px}
+.modal-box h2{margin:0 0 14px;font-size:18px}
+.modal-box h3{margin:14px 0 8px;font-size:15px}
+.modal-box>label,.modal-box form>label{margin-bottom:12px}
+.modal-box p{margin:0 0 12px}
+.permgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin-top:10px}
+.permgrid label{flex-direction:row;align-items:center;gap:8px;border:1px solid var(--line);padding:8px 10px;border-radius:10px;font-weight:600;cursor:pointer;color:var(--ink)}
+.permgrid label:hover{background:#f6f9fc}
+.permgrid input{width:auto}
+
+.printhead,.signs,#voucherPrint{display:none}
+.v{border:2px solid #111;padding:22px;max-width:720px;margin:20px auto;font-size:15px}
+.v-h{display:flex;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:14px}
+.v-h h2{margin:0}
+.v-t{font-size:22px;font-weight:800}
+.v table{min-width:0}
+.v td{border:1px solid #999;padding:10px}
+.v td:first-child{width:28%;background:#f1f1f1;font-weight:700}
+.v .sg{display:flex;justify-content:space-around;margin-top:46px}
+@media print{
+  body{background:#fff;font-size:12px}
+  .top,.toolbar,#formCard,.noprint,.btn,.rowact,.filters,.search,#toast,#auth,.modal,.fundbar,.loadbar,#splash,#cfg{display:none!important}
+  main{margin:0;padding:0;max-width:none}
+  .card{border:0;box-shadow:none;margin-bottom:10px}
+  .card-h{padding:6px 0}
+  .printhead{display:block;text-align:center;margin-bottom:10px}
+  .printhead h2{margin:0}
+  .signs{display:flex;justify-content:space-around;margin-top:46px;font-weight:700}
+  .tw{overflow:visible}
+  table{min-width:0}
+  th,td{padding:5px 6px}
+  .stat{border:1px solid #888;padding:6px 10px;break-inside:avoid}
+  .stat strong{font-size:16px}
+  .s-close{background:#fff!important}.s-close span,.s-close strong,.s-close small{color:#000!important}
+  body.pv main,body.pv .top{display:none!important}
+  body.pv #voucherPrint{display:block}
+}
+</style>
+</head>
+<body data-view="splash">
+<div class="loadbar"></div>
+
+<!-- ===================== تحميل ===================== -->
+<div id="splash"><div id="splashMsg">جارِ التحميل…</div><button class="btn" id="retry" hidden>إعادة المحاولة</button></div>
+
+<!-- ===================== لم يتم ربط Supabase بعد ===================== -->
+<div id="cfg">
+  <div class="auth-box">
+    <div class="auth-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+    <h1>لم يتم ربط قاعدة البيانات بعد</h1>
+    <p>أكمل هذه الخطوات مرة واحدة:</p>
+    <ol>
+      <li>أنشئ مشروعاً في <b>Supabase</b>.</li>
+      <li>نفّذ ملف <code>schema.sql</code> في SQL Editor.</li>
+      <li>ضع <b>Project URL</b> و<b>anon key</b> داخل ملف <code>config.js</code>.</li>
+      <li>أعد رفع الملفين ثم حدّث هذه الصفحة.</li>
+    </ol>
+    <p>التفاصيل الكاملة في ملف <b>README</b>.</p>
+  </div>
+</div>
+
+<!-- ===================== شاشة الدخول / الإعداد الأول ===================== -->
+<div id="auth">
+  <form class="auth-box" id="authForm" autocomplete="on">
+    <div class="auth-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><circle cx="17" cy="14.5" r="1.4"/><path d="M5 6l11-3 1 3"/></svg></div>
+    <h1 id="authTitle">تسجيل الدخول</h1>
+    <p id="authSub"></p>
+    <label id="aNameL" hidden>الاسم الكامل<input id="aName" autocomplete="name"></label>
+    <label>اسم المستخدم<input id="aUser" class="ltr" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+    <label>كلمة المرور<input type="password" id="aPass" class="ltr" autocomplete="current-password"></label>
+    <label id="aPass2L" hidden>تأكيد كلمة المرور<input type="password" id="aPass2" class="ltr" autocomplete="new-password"></label>
+    <label class="chk" id="aRemL"><input type="checkbox" id="aRem"> تذكّرني على هذا الجهاز</label>
+    <div class="auth-err" id="authErr"></div>
+    <button class="btn primary" type="submit" id="authBtn">دخول</button>
+  </form>
+</div>
+
+<header class="top"><div class="top-in">
+  <div class="brand">
+    <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><circle cx="17" cy="14.5" r="1.4"/><path d="M5 6l11-3 1 3"/></svg></div>
+    <div><h1 id="coName">يومية الصندوق</h1><small>يومية الصندوق</small></div>
+  </div>
+  <nav class="tabs">
+    <button data-tab="daily" class="on">اليومية</button>
+    <button data-tab="reports">التقارير</button>
+    <button data-tab="settings">الإعدادات</button>
+  </nav>
+  <div class="userbar" id="userBar" hidden>
+    <span class="who" id="whoName"></span>
+    <button class="btn sm" id="pwBtn" type="button">🔑 كلمة المرور</button>
+    <button class="btn sm" id="outBtn" type="button">خروج</button>
+  </div>
+</div></header>
+
+<main>
+<div class="fundbar" id="fundBar"></div>
+<div class="note" id="noFund" hidden></div>
+
+<!-- ===================== اليومية ===================== -->
+<section id="tab-daily">
+<div id="dailyMain">
+  <div class="printhead" id="dPrintHead"></div>
+
+  <div class="toolbar">
+    <div class="datenav">
+      <button class="btn sm" id="prevDay">→ السابق</button>
+      <input type="date" id="dateInput">
+      <button class="btn sm" id="nextDay">التالي ←</button>
+      <button class="btn sm" id="todayBtn">اليوم</button>
+    </div>
+    <span class="dayname" id="dayName"></span>
+    <span class="sp"></span>
+    <button class="btn in" id="newIn">+ سند قبض</button>
+    <button class="btn out" id="newOut">+ سند دفع</button>
+    <button class="btn" id="dPrint">🖨 طباعة اليومية</button>
+    <button class="btn" id="dCsv">⬇ تصدير Excel</button>
+  </div>
+
+  <div class="stats" id="dStats"></div>
+
+  <form class="card t-in" id="formCard" autocomplete="off">
+    <div class="card-h">
+      <h2 id="formTitle">سند جديد</h2>
+      <div class="seg" id="typeSeg">
+        <button type="button" data-t="in" class="in on">قبض (+)</button>
+        <button type="button" data-t="out" class="out">دفع (−)</button>
+      </div>
+    </div>
+    <div class="pad">
+      <div class="grid">
+        <label>التاريخ<input type="date" id="fDate"></label>
+        <label class="span2">البيان<input id="fDesc" placeholder="مثال: مبيعات اليوم / دفع فاتورة كهرباء"></label>
+        <label>الجهة / الاسم<input id="fParty" placeholder="اختياري"></label>
+        <label>التصنيف<select id="fCat"></select></label>
+        <label>المبلغ<input id="fAmt" inputmode="decimal" placeholder="0.00"></label>
+      </div>
+      <div class="form-actions">
+        <button class="btn primary" type="submit" id="fSave">💾 حفظ السند</button>
+        <button class="btn" type="button" id="fCancel" hidden>إلغاء التعديل</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="card">
+    <div class="card-h">
+      <h2>حركات اليوم</h2>
+      <input class="search" id="q" placeholder="🔍 بحث في الحركات...">
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>رقم السند</th><th>البيان</th><th>الجهة</th><th>التصنيف</th><th>بواسطة</th><th>مقبوضات</th><th>مدفوعات</th><th>الرصيد</th><th class="rowact">إجراءات</th></tr></thead>
+        <tbody id="dBody"></tbody>
+        <tfoot id="dFoot"></tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="signs"><span>أمين الصندوق: ..............</span><span>المحاسب: ..............</span><span>المدير: ..............</span></div>
+</div>
+</section>
+
+<!-- ===================== التقارير ===================== -->
+<section id="tab-reports" hidden>
+<div id="reportMain">
+  <div class="printhead" id="rPrintHead"></div>
+  <div class="filters card pad">
+    <label>من تاريخ<input type="date" id="rFrom"></label>
+    <label>إلى تاريخ<input type="date" id="rTo"></label>
+    <div class="quick">
+      <button class="btn sm" data-q="month">هذا الشهر</button>
+      <button class="btn sm" data-q="last">الشهر الماضي</button>
+      <button class="btn sm" data-q="year">هذه السنة</button>
+      <button class="btn sm" data-q="all">الكل</button>
+    </div>
+    <span style="flex:1"></span>
+    <button class="btn" id="rPrint">🖨 طباعة</button>
+    <button class="btn" id="rCsv">⬇ تصدير Excel</button>
+  </div>
+  <div id="rBody"></div>
+</div>
+</section>
+
+<!-- ===================== الإعدادات (للمدير فقط) ===================== -->
+<section id="tab-settings" hidden>
+  <div class="card pad">
+    <h2>بيانات المنشأة</h2>
+    <div class="grid">
+      <label>اسم المنشأة<input id="sCo"></label>
+      <label>المنطقة الزمنية (لتحديد «اليوم»)<select id="sTz"></select></label>
+    </div>
+  </div>
+
+  <div class="card pad">
+    <div class="card-h">
+      <h2>الصناديق</h2>
+      <button class="btn primary" id="fAdd" type="button">+ صندوق جديد</button>
+    </div>
+    <div class="tw"><table style="min-width:820px">
+      <thead><tr><th>الصندوق</th><th>العملة</th><th>الرصيد الافتتاحي</th><th>الرصيد الحالي</th><th>السندات</th><th>الحالة</th><th class="rowact">إجراءات</th></tr></thead>
+      <tbody id="fBody"></tbody>
+    </table></div>
+    <p class="hint"><b>إقفال وتصفير الرصيد:</b> يُسجَّل سند تصفير بقيمة الرصيد فيصبح الرصيد صفراً، وكل السندات القديمة تبقى في السجل والتقارير. &nbsp;<b>حذف كل السندات:</b> يمسح سجل الصندوق نهائياً ويعيد الترقيم من البداية. الحذف النهائي للصندوق ممكن فقط إذا كان فارغاً.</p>
+  </div>
+
+  <div class="card pad" id="usersCard">
+    <div class="card-h">
+      <h2>المستخدمون والصلاحيات</h2>
+      <button class="btn primary" id="uAdd" type="button">+ مستخدم جديد</button>
+    </div>
+    <div class="tw"><table style="min-width:820px">
+      <thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>النوع</th><th>الحالة</th><th>الصناديق</th><th>الصلاحيات</th><th class="rowact">إجراءات</th></tr></thead>
+      <tbody id="uBody"></tbody>
+    </table></div>
+    <p class="hint">المدير يملك كل الصلاحيات وكل الصناديق. الموظف يرى فقط الصناديق التي تحددها له، وبدون أي صلاحية يرى حركات اليوم فقط. أنشئ أكثر من مدير حتى لا تفقد الوصول إذا نسي أحدهم كلمة مروره.</p>
+  </div>
+
+  <div class="card pad"><h2>التصنيفات</h2><div class="grid2" id="catArea"></div></div>
+
+  <div class="card pad">
+    <h2>سجل العمليات الحساسة</h2>
+    <div class="tw" style="max-height:340px;overflow:auto"><table style="min-width:760px">
+      <thead><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>الصندوق</th><th>التفاصيل</th></tr></thead>
+      <tbody id="aBody"></tbody>
+    </table></div>
+    <p class="hint">يُسجَّل هنا حذف وتعديل السندات والتصفير وإدارة الصناديق والمستخدمين (آخر 200 عملية).</p>
+  </div>
+
+  <div class="card pad">
+    <h2>البيانات والنسخ الاحتياطي</h2>
+    <div class="btnrow">
+      <select id="dFund"></select>
+      <button class="btn" id="allCsv">⬇ تصدير كل حركات هذا الصندوق (Excel)</button>
+      <button class="btn" id="impBtn">⬆ استيراد من نسخة البرنامج القديم</button>
+      <input type="file" id="impFile" accept=".json,application/json" hidden>
+    </div>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn" id="bkExport">⬇ نسخة احتياطية لكل الصناديق (JSON)</button>
+    </div>
+    <p class="hint">البيانات محفوظة في قاعدة Supabase ويراها كل الأجهزة. الاستيراد يقبل ملف JSON الذي كان يُنشئه البرنامج القديم (المحفوظ في المتصفح) ويضيف سنداته إلى الصندوق المختار أعلاه.</p>
+  </div>
+</section>
+</main>
+
+<!-- نافذة المستخدم -->
+<div class="modal" id="userModal">
+  <form class="modal-box wide" id="userForm" autocomplete="off">
+    <h2 id="uTitle">مستخدم جديد</h2>
+    <input type="hidden" id="uId">
+    <div class="grid">
+      <label>الاسم الكامل<input id="uName"></label>
+      <label>اسم المستخدم (للدخول)<input id="uUser" class="ltr" autocapitalize="none" spellcheck="false"></label>
+      <label>كلمة المرور<input type="password" id="uPass" class="ltr" autocomplete="new-password"><small class="mut" id="uPassHint"></small></label>
+      <label>نوع الحساب<select id="uRole"><option value="emp">موظف</option><option value="admin">مدير (كل الصلاحيات)</option></select></label>
+    </div>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="uActive" checked> الحساب مفعّل (يستطيع الدخول)</label>
+    <div id="permWrap">
+      <h3>الصناديق المسموحة</h3>
+      <div class="permgrid" id="uFundGrid"></div>
+      <h3>الصلاحيات</h3>
+      <div class="quick" id="presets"></div>
+      <div class="permgrid" id="permGrid"></div>
+      <p class="hint">بدون أي صلاحية يرى الموظف حركات اليوم فقط ولا يستطيع إضافة شيء. صلاحيتا «الطباعة» و«التصدير» تتحكمان بظهور الأزرار فقط.</p>
+    </div>
+    <div class="form-actions">
+      <button class="btn primary" type="submit" id="uSave">💾 حفظ</button>
+      <button class="btn" type="button" id="uCancel">إلغاء</button>
+    </div>
+  </form>
+</div>
+
+<!-- نافذة الصندوق -->
+<div class="modal" id="fundModal">
+  <form class="modal-box" id="fundForm" autocomplete="off">
+    <h2 id="fmTitle">صندوق جديد</h2>
+    <input type="hidden" id="fmId">
+    <label>اسم الصندوق<input id="fmName" placeholder="مثال: صندوق الدولار"></label>
+    <label>العملة<input id="fmCur" list="curList" placeholder="$"><datalist id="curList"><option value="ل.س"><option value="$"><option value="€"><option value="ر.س"><option value="د.إ"><option value="د.أ"><option value="د.ع"><option value="ج.م"><option value="ر.ي"><option value="ل.ل"><option value="د.ك"><option value="₺"></datalist></label>
+    <label>الرصيد الافتتاحي<input id="fmOpen" inputmode="decimal" placeholder="0"></label>
+    <label>الترتيب (الأصغر أولاً)<input id="fmSort" inputmode="numeric" placeholder="0"></label>
+    <label class="chk"><input type="checkbox" id="fmActive" checked> الصندوق مفعّل</label>
+    <p class="hint">الرصيد الافتتاحي هو المبلغ الموجود في الصندوق قبل أول سند. تغييره لاحقاً يغيّر كل الأرصدة اللاحقة.</p>
+    <div class="form-actions">
+      <button class="btn primary" type="submit" id="fmSave">💾 حفظ</button>
+      <button class="btn" type="button" id="fmCancel">إلغاء</button>
+    </div>
+  </form>
+</div>
+
+<!-- نافذة إقفال وتصفير الصندوق -->
+<div class="modal" id="closeModal">
+  <form class="modal-box" id="closeForm" autocomplete="off">
+    <h2>إقفال وتصفير الرصيد</h2>
+    <input type="hidden" id="cmId">
+    <p id="cmInfo"></p>
+    <label>تاريخ التصفير<input type="date" id="cmDate"></label>
+    <label>ملاحظة (اختياري)<input id="cmNote" placeholder="مثال: إقفال شهر تشرين الأول"></label>
+    <p class="hint">يُسجَّل سند تصفير بقيمة الرصيد حتى هذا التاريخ، فيصبح الرصيد صفراً. السندات القديمة لا تُحذف. يمكنك حذف سند التصفير لاحقاً للتراجع.</p>
+    <div class="form-actions">
+      <button class="btn warn" type="submit" id="cmSave">إقفال وتصفير</button>
+      <button class="btn" type="button" id="cmCancel">إلغاء</button>
+    </div>
+  </form>
+</div>
+
+<!-- نافذة تغيير كلمة المرور -->
+<div class="modal" id="pwModal">
+  <form class="modal-box" id="pwForm" autocomplete="off">
+    <h2>تغيير كلمة المرور</h2>
+    <label>كلمة المرور الحالية<input type="password" id="pOld" class="ltr" autocomplete="current-password"></label>
+    <label>كلمة المرور الجديدة (6 أحرف على الأقل)<input type="password" id="pNew" class="ltr" autocomplete="new-password"></label>
+    <label>تأكيد كلمة المرور الجديدة<input type="password" id="pNew2" class="ltr" autocomplete="new-password"></label>
+    <div class="form-actions">
+      <button class="btn primary" type="submit">حفظ</button>
+      <button class="btn" type="button" id="pCancel">إلغاء</button>
+    </div>
+  </form>
+</div>
+
+<div id="voucherPrint"></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+'use strict';
+const CFG=window.CASHBOOK_CONFIG||{};
+const SKEY='cashbook_token';
+/* الصلاحيات: [المفتاح, الوصف الكامل, الوصف المختصر] */
+const PERMS=[
+  ['add_in','إضافة سندات قبض','إضافة قبض'],
+  ['add_out','إضافة سندات دفع','إضافة دفع'],
+  ['edit','تعديل السندات','تعديل'],
+  ['delete','حذف السندات','حذف'],
+  ['past','الوصول إلى الأيام السابقة (وإلا اليوم فقط)','الأيام السابقة'],
+  ['reports','عرض التقارير','التقارير'],
+  ['print','الطباعة (اليومية والسندات)','طباعة'],
+  ['export','التصدير إلى Excel','تصدير']
+];
+const PRESETS={
+  cashier:{label:'أمين صندوق',p:['add_in','add_out','print']},
+  acct:{label:'محاسب',p:['add_in','add_out','edit','past','reports','print','export']},
+  viewer:{label:'مشاهدة فقط',p:['past','reports']},
+  none:{label:'بدون صلاحيات',p:[]}
+};
+const TZS=['Asia/Damascus','Asia/Beirut','Asia/Amman','Asia/Baghdad','Asia/Riyadh','Asia/Kuwait','Asia/Dubai','Asia/Qatar','Africa/Cairo','Europe/Istanbul','Asia/Aden','Africa/Tripoli','Africa/Tunis','Africa/Algiers','Africa/Casablanca','UTC'];
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const r2=n=>Math.round((Number(n)||0)*100)/100;
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+function addDays(s,n){const [y,m,d]=s.split('-').map(Number);return ymd(new Date(y,m-1,d+n))}
+function fmtDate(s){const [y,m,d]=s.split('-');return d+'/'+m+'/'+y}
+function weekday(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('ar',{weekday:'long'})}
+function fmt(n){n=r2(n);if(Math.abs(n)<0.005)n=0;return n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2})}
+function parseAmt(v){
+  v=String(v||'').trim()
+   .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+   .replace(/[٬,\s]/g,'').replace(/٫/g,'.');
+  const n=parseFloat(v);return isFinite(n)?n:NaN;
+}
+let tt;function toast(m,k){const t=$('#toast');t.textContent=m;t.className='show '+(k||'');clearTimeout(tt);tt=setTimeout(()=>t.className='',k==='err'?4200:2200)}
+const setView=v=>{document.body.dataset.view=v};
+const showM=id=>$(id).classList.add('show'),hideM=id=>$(id).classList.remove('show');
+
+/* ---------- الحالة ---------- */
+let sid='',S=null,L=null,R=null,USERS=[],AUDIT=[];
+let reqD=0,reqR=0,pending=0,saving=false,expiring=false,setupMode=false,rAll=false;
+const state={tab:'daily',fund:'',date:'',editId:null,editType:null,type:'in',q:''};
+const todayStr=()=>(S&&S.today)||ymd(new Date());
+const isAdmin=()=>!!S&&S.me.role==='admin';
+const can=p=>!!S&&(S.me.role==='admin'||S.me.perms[p]===true);
+const curFund=()=>S?(S.funds.find(f=>f.id===state.fund&&f.active)||null):null;
+const touchable=e=>e.kind==='close'?isAdmin():(can('past')||e.date===todayStr());
+const defType=()=>can('add_in')?'in':can('add_out')?'out':'in';
+function money(n,cur){return '<bdi dir="ltr" class="'+(n<0?'neg':'')+'">'+fmt(n)+'</bdi> <small>'+esc(cur!=null?cur:(curFund()||{}).currency||'')+'</small>'}
+
+/* ---------- جلسة المتصفح ---------- */
+function getSid(){try{return sessionStorage.getItem(SKEY)||localStorage.getItem(SKEY)||''}catch(e){return ''}}
+function setSid(id,remember){try{sessionStorage.setItem(SKEY,id);if(remember)localStorage.setItem(SKEY,id);else localStorage.removeItem(SKEY)}catch(e){}}
+function clearSid(){try{sessionStorage.removeItem(SKEY);localStorage.removeItem(SKEY)}catch(e){}}
+
+/* ---------- الاتصال بقاعدة البيانات ---------- */
+function busy(d){pending+=d;document.body.classList.toggle('busy',pending>0)}
+async function rpc(fn,args,quiet){
+  busy(1);
+  try{
+    const h={'Content-Type':'application/json',apikey:CFG.key};
+    if(/^eyJ/.test(CFG.key))h.Authorization='Bearer '+CFG.key;
+    let r;
+    try{
+      r=await fetch(String(CFG.url).replace(/\/+$/,'')+'/rest/v1/rpc/'+fn,{method:'POST',headers:h,body:JSON.stringify({p:Object.assign({token:sid},args||{})})});
+    }catch(e){const x=new Error('تعذّر الاتصال بالخادم، تحقق من الإنترنت');x.net=true;throw x}
+    const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(_){}
+    if(!r.ok){
+      let msg=(j&&j.message)||('خطأ غير متوقع ('+r.status+')');
+      if(r.status===404||(j&&/PGRST20[0-9]/.test(j.code||'')))msg='قاعدة البيانات غير جاهزة: نفّذ ملف schema.sql في Supabase أولاً';
+      if(r.status===401&&(j&&/apikey|JWT|key/i.test(j.message||''))&&!/الجلسة/.test(msg))msg='مفتاح Supabase في config.js غير صحيح';
+      const x=new Error(msg);x.status=r.status;
+      if(r.status===401&&/الجلسة/.test(msg)&&sid&&!quiet)expired();
+      throw x;
+    }
+    return j;
+  }finally{busy(-1)}
+}
+function fail(e){if(e&&e.status===401&&/الجلسة/.test(e.message||''))return;toast((e&&e.message)||'حدث خطأ غير متوقع','err')}
+const g=fn=>async(...a)=>{try{await fn(...a)}catch(e){fail(e)}};
+
+/* ---------- الدخول والخروج ---------- */
+function showAuth(setup){
+  setupMode=setup;setView('auth');
+  $('#authTitle').textContent=setup?'إعداد حساب المدير':'تسجيل الدخول';
+  $('#authSub').textContent=setup?'أنشئ حساب المدير أولاً؛ من خلاله تضيف الموظفين وتحدد صلاحياتهم والصناديق المسموحة لكل واحد. يُنشأ تلقائياً صندوقان: الليرة والدولار.':((S&&S.company)||'');
+  $('#aNameL').hidden=!setup;$('#aPass2L').hidden=!setup;$('#aRemL').hidden=setup;
+  $('#aPass').autocomplete=setup?'new-password':'current-password';
+  $('#authBtn').textContent=setup?'إنشاء الحساب والدخول':'دخول';
+  $('#aPass').value='';$('#aPass2').value='';$('#authErr').textContent='';$('#authBtn').disabled=false;
+  setTimeout(()=>{try{$(setup?'#aName':'#aUser').focus()}catch(e){}},50);
+}
+async function initAuth(){
+  setView('splash');$('#splashMsg').textContent='جارِ التحميل…';$('#retry').hidden=true;
+  try{const need=await rpc('needs_setup',{},true);showAuth(need===true)}
+  catch(e){setView('splash');$('#splashMsg').textContent=e.message;$('#retry').hidden=false}
+}
+function expired(){
+  if(expiring)return;expiring=true;
+  sid='';clearSid();S=null;L=null;R=null;
+  ['#userModal','#fundModal','#closeModal','#pwModal'].forEach(hideM);
+  initAuth().then(()=>toast('انتهت الجلسة، سجّل الدخول من جديد','err'));
+  setTimeout(()=>{expiring=false},800);
+}
+async function loadBoot(quiet){
+  const r=await rpc('boot',{},quiet);
+  S=r;
+  if(!S.funds.some(f=>f.id===state.fund&&f.active))state.fund=(S.funds.find(f=>f.active)||{}).id||'';
+  if(!state.date||!can('past'))state.date=S.today;
+}
+async function enter(){
+  await loadBoot();
+  state.tab='daily';state.date=S.today;state.q='';$('#q').value='';state.editId=null;state.editType=null;
+  L=null;R=null;
+  setView('app');
+  setType(defType());resetForm();
+  await renderAll();
+}
+async function authSubmit(e){
+  e.preventDefault();
+  const err=m=>{$('#authErr').textContent=m};err('');
+  const un=$('#aUser').value.trim().toLowerCase(),pw=$('#aPass').value;
+  if(!un||!pw)return err('اكتب اسم المستخدم وكلمة المرور');
+  $('#authBtn').disabled=true;
+  try{
+    if(setupMode){
+      const name=$('#aName').value.trim();
+      if(!name)return err('اكتب الاسم الكامل');
+      if(!/^\S{3,}$/.test(un))return err('اسم المستخدم 3 أحرف على الأقل وبدون مسافات');
+      if(pw.length<6)return err('كلمة المرور 6 أحرف على الأقل');
+      if(pw!==$('#aPass2').value)return err('تأكيد كلمة المرور غير مطابق');
+      const r=await rpc('setup_admin',{name:name,username:un,password:pw},true);
+      sid=r.token;setSid(sid,false);await enter();toast('تم إنشاء حساب المدير ✔');
+    }else{
+      const remember=$('#aRem').checked;
+      const r=await rpc('login',{username:un,password:pw,remember:remember},true);
+      if(!r.ok)return err(r.error);
+      sid=r.token;setSid(sid,remember);await enter();
+    }
+  }catch(x){err(x.message)}
+  finally{$('#authBtn').disabled=false}
+}
+async function logout(){
+  try{await rpc('logout',{},true)}catch(e){}
+  sid='';clearSid();S=null;L=null;R=null;state.editId=null;state.editType=null;state.tab='daily';
+  $('#aUser').value='';
+  initAuth();
+}
+
+/* ---------- العرض العام ---------- */
+function applyPerms(){
+  if(!S)return;
+  $('#userBar').hidden=false;
+  $('#whoName').textContent=S.me.name+' · '+(isAdmin()?'مدير':'موظف');
+  $('[data-tab="reports"]').hidden=!can('reports');
+  $('[data-tab="settings"]').hidden=!isAdmin();
+  $('#newIn').hidden=!can('add_in');$('#newOut').hidden=!can('add_out');
+  $('#dPrint').hidden=!can('print');$('#dCsv').hidden=!can('export');
+  $('#rPrint').hidden=!can('print');$('#rCsv').hidden=!can('export');
+  const past=can('past');
+  $('#prevDay').hidden=!past;$('#nextDay').hidden=!past;$('#todayBtn').hidden=!past;
+  $('#dateInput').disabled=!past;$('#fDate').disabled=!past;
+  $('#formCard').hidden=!(can('add_in')||can('add_out')||state.editId);
+  updateTypeBtns();
+}
+function renderFundBar(){
+  const bar=$('#fundBar');
+  if(!S||state.tab==='settings'){bar.hidden=true;return}
+  const list=S.funds.filter(f=>f.active);
+  bar.hidden=!list.length;
+  bar.innerHTML=list.map(f=>'<button type="button" class="fund'+(f.id===state.fund?' on':'')+'" data-fund="'+f.id+'"><b>'+esc(f.name)+'</b><span><bdi dir="ltr" class="'+(f.balance<0?'neg':'')+'">'+fmt(f.balance)+'</bdi> '+esc(f.currency)+'</span></button>').join('');
+}
+async function renderAll(){
+  if(!S)return;
+  if(state.tab==='reports'&&!can('reports'))state.tab='daily';
+  if(state.tab==='settings'&&!isAdmin())state.tab='daily';
+  applyPerms();
+  $$('main > section').forEach(s=>s.hidden=s.id!=='tab-'+state.tab);
+  $$('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===state.tab));
+  $('#coName').textContent=S.company||'يومية الصندوق';
+  document.title=(S.company||'')+' — يومية الصندوق';
+  renderFundBar();
+  const noFund=!curFund()&&state.tab!=='settings';
+  $('#noFund').hidden=!noFund;
+  if(noFund)$('#noFund').textContent=isAdmin()?'لا توجد صناديق مفعّلة. أضف صندوقاً من الإعدادات ← الصناديق.':'لم يُخصَّص لك أي صندوق بعد. راجع المدير.';
+  $('#dailyMain').hidden=noFund;$('#reportMain').hidden=noFund;
+  try{
+    if(state.tab==='daily')await loadDay();
+    else if(state.tab==='reports')await loadReport();
+    else await renderSettings();
+  }catch(e){fail(e)}
+}
+async function reload(){await loadBoot();await renderAll()}
+
+/* ---------- اليومية ---------- */
+const dayEntries=()=>L?L.entries:[];
+function sums(list){
+  let i=0,o=0,z=0;
+  list.forEach(e=>{
+    if(e.kind==='close')z+=e.type==='in'?e.amount:-e.amount;
+    else if(e.type==='in')i+=e.amount;else o+=e.amount;
+  });
+  return {in:r2(i),out:r2(o),z:r2(z)};
+}
+function stats(op,i,o,cl,a,b,z){
+  return '<div class="stat s-open"><span>'+a+'</span><strong>'+money(op)+'</strong></div>'+
+    '<div class="stat s-in"><span>إجمالي المقبوضات</span><strong>'+money(i)+'</strong></div>'+
+    '<div class="stat s-out"><span>إجمالي المدفوعات</span><strong>'+money(o)+'</strong></div>'+
+    (z?'<div class="stat s-zero"><span>تصفير الرصيد</span><strong>'+money(z)+'</strong></div>':'')+
+    '<div class="stat s-close"><span>'+b+'</span><strong>'+money(cl)+'</strong></div>';
+}
+function fillCats(sel){
+  const list=(S&&S.cats&&S.cats[state.type])||[];
+  let h='<option value="">— بدون تصنيف —</option>'+list.map(c=>'<option>'+esc(c)+'</option>').join('');
+  if(sel&&list.indexOf(sel)<0)h+='<option>'+esc(sel)+'</option>';
+  $('#fCat').innerHTML=h;$('#fCat').value=sel||'';
+}
+function updateTypeBtns(){
+  $$('#typeSeg button').forEach(b=>{const t=b.dataset.t;b.hidden=!(can('add_'+t)||(state.editId&&state.editType===t))});
+}
+function setType(t){
+  state.type=t;
+  $$('#typeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('#formCard').className='card t-'+t;
+  fillCats('');
+  updateTypeBtns();
+}
+async function loadDay(){
+  const f=curFund();if(!f){return}
+  if(!can('past'))state.date=todayStr();
+  const my=++reqD,date=state.date;
+  renderDaily();
+  const r=await rpc('ledger',{fund:f.id,from:date,to:date});
+  if(my!==reqD)return;
+  L={fund:f.id,date:date,opening:r.opening,entries:r.entries};
+  renderDaily();
+}
+function renderDaily(){
+  const f=curFund();if(!S||!f)return;
+  applyPerms();
+  const date=state.date;
+  $('#dateInput').value=date;if(!state.editId)$('#fDate').value=date;
+  $('#dayName').textContent=weekday(date);
+  if(!L||L.fund!==f.id||L.date!==date){
+    $('#dBody').innerHTML='<tr><td colspan="10" class="empty">جارِ التحميل…</td></tr>';$('#dFoot').innerHTML='';$('#dStats').innerHTML='';return;
+  }
+  const list=L.entries,s=sums(list),op=L.opening,cl=r2(op+s.in-s.out+s.z);
+  $('#dStats').innerHTML=stats(op,s.in,s.out,cl,'رصيد أول اليوم (مرحّل)','رصيد آخر اليوم',s.z);
+  $('#dPrintHead').innerHTML='<h2>'+esc(S.company)+'</h2><div>'+esc(f.name)+' ('+esc(f.currency)+') — يومية الصندوق — '+weekday(date)+' '+fmtDate(date)+'</div>';
+  const q=state.q.trim().toLowerCase();
+  const cEdit=can('edit'),cDel=can('delete'),cPrint=can('print');
+  let bal=op,rows='<tr class="open"><td colspan="8">رصيد أول اليوم (مرحّل)</td><td class="num">'+fmt(op)+'</td><td class="rowact"></td></tr>',shown=0;
+  list.forEach((e,i)=>{
+    bal=r2(bal+(e.type==='in'?e.amount:-e.amount));
+    if(q&&(e.desc+' '+e.party+' '+e.cat+' '+e.no+' '+e.by).toLowerCase().indexOf(q)<0)return;
+    shown++;
+    const zr=e.kind==='close',tch=touchable(e);
+    const acts=(!zr&&cEdit&&tch?'<button class="btn sm" data-act="edit" data-id="'+e.id+'">تعديل</button>':'')+
+      (!zr&&cPrint?'<button class="btn sm" data-act="print" data-id="'+e.id+'">سند</button>':'')+
+      ((zr?isAdmin():(cDel&&tch))?'<button class="btn sm danger" data-act="del" data-id="'+e.id+'">حذف</button>':'');
+    rows+='<tr'+(zr?' class="zero"':'')+'><td>'+(i+1)+'</td><td><span class="badge '+(zr?'zero':e.type)+'">'+esc(e.no)+'</span></td><td>'+esc(e.desc)+'</td>'+
+      '<td>'+(esc(e.party)||'<span class="mut">—</span>')+'</td>'+
+      '<td>'+(e.cat?'<span class="tag">'+esc(e.cat)+'</span>':'<span class="mut">—</span>')+'</td>'+
+      '<td>'+(e.by?esc(e.by):'<span class="mut">—</span>')+'</td>'+
+      '<td class="num in-c">'+(e.type==='in'?fmt(e.amount):'')+'</td>'+
+      '<td class="num out-c">'+(e.type==='out'?fmt(e.amount):'')+'</td>'+
+      '<td class="num"><b class="'+(bal<0?'neg':'')+'">'+fmt(bal)+'</b></td>'+
+      '<td class="rowact">'+acts+'</td></tr>';
+  });
+  if(!shown)rows+='<tr><td colspan="10" class="empty">'+(list.length?'لا توجد نتائج مطابقة للبحث':'لا توجد حركات في هذا اليوم'+((can('add_in')||can('add_out'))?' — سجّل أول سند من النموذج أعلاه':''))+'</td></tr>';
+  $('#dBody').innerHTML=rows;
+  $('#dFoot').innerHTML='<tr><td colspan="6">إجمالي اليوم</td><td class="num in-c">'+fmt(s.in)+'</td><td class="num out-c">'+fmt(s.out)+'</td><td class="num">'+fmt(cl)+'</td><td class="rowact"></td></tr>';
+}
+function gotoDate(d){
+  if(!can('past'))d=todayStr();
+  state.date=d;if(!state.editId)$('#fDate').value=d;
+  loadDay().catch(fail);
+}
+function resetForm(){
+  state.editId=null;state.editType=null;
+  $('#formTitle').textContent='سند جديد';
+  $('#fCancel').hidden=true;
+  $('#fDesc').value='';$('#fParty').value='';$('#fAmt').value='';
+  $('#fDate').value=state.date;
+  fillCats('');
+}
+function startEdit(id){
+  const e=dayEntries().find(x=>x.id===id);if(!e||e.kind==='close')return;
+  if(!can('edit')||!touchable(e)){toast('لا تملك صلاحية تعديل هذا السند','err');return}
+  state.editId=id;state.editType=e.type;setType(e.type);
+  $('#formCard').hidden=false;
+  $('#formTitle').textContent='تعديل السند '+e.no;
+  $('#fCancel').hidden=false;
+  $('#fDate').value=e.date;$('#fDesc').value=e.desc;$('#fParty').value=e.party;$('#fAmt').value=e.amount;
+  fillCats(e.cat);
+  $('#formCard').scrollIntoView({behavior:'smooth',block:'center'});
+  $('#fDesc').focus();
+}
+async function saveEntry(){
+  if(saving||!S)return;
+  const f=curFund();if(!f){toast('اختر صندوقاً','err');return}
+  let date=$('#fDate').value;
+  const desc=$('#fDesc').value.trim(),party=$('#fParty').value.trim(),cat=$('#fCat').value,amt=parseAmt($('#fAmt').value);
+  if(!can('past'))date=todayStr();
+  if(!date){toast('اختر التاريخ','err');return}
+  if(!desc){toast('اكتب البيان','err');$('#fDesc').focus();return}
+  if(!(amt>0)){toast('أدخل مبلغاً صحيحاً أكبر من صفر','err');$('#fAmt').focus();return}
+  saving=true;$('#fSave').disabled=true;
+  try{
+    await rpc('save_entry',{id:state.editId||'',fund:f.id,date:date,type:state.type,desc:desc,party:party,cat:cat,amount:r2(amt)});
+    state.date=date;resetForm();
+    await reload();
+    toast('تم حفظ السند ✔');
+    if(!$('#formCard').hidden)$('#fDesc').focus();
+  }catch(e){fail(e)}
+  finally{saving=false;$('#fSave').disabled=false}
+}
+async function delEntry(id){
+  const e=dayEntries().find(x=>x.id===id);if(!e)return;
+  if(!confirm('حذف '+(e.kind==='close'?'سند التصفير ':'السند ')+e.no+' ('+e.desc+')؟'))return;
+  await rpc('delete_entry',{id:id});
+  if(state.editId===id)resetForm();
+  await reload();toast('تم حذف السند');
+}
+function printVoucher(id){
+  if(!can('print')){toast('لا تملك صلاحية الطباعة','err');return}
+  const e=dayEntries().find(x=>x.id===id),f=curFund();if(!e||!f)return;
+  const inn=e.type==='in';
+  $('#voucherPrint').innerHTML='<div class="v"><div class="v-h"><div><h2>'+esc(S.company)+'</h2><div class="v-t">'+(inn?'سند قبض':'سند دفع')+'</div><div>'+esc(f.name)+'</div></div><div>رقم السند: <b>'+esc(e.no)+'</b><br>التاريخ: '+fmtDate(e.date)+'</div></div>'+
+   '<table><tr><td>المبلغ</td><td><b>'+fmt(e.amount)+' '+esc(f.currency)+'</b></td></tr>'+
+   '<tr><td>'+(inn?'استلمنا من':'دفعنا إلى')+'</td><td>'+(esc(e.party)||'—')+'</td></tr>'+
+   '<tr><td>وذلك عن</td><td>'+esc(e.desc)+'</td></tr>'+
+   '<tr><td>التصنيف</td><td>'+(esc(e.cat)||'—')+'</td></tr></table>'+
+   '<div class="sg"><span>المستلم: ..............</span><span>أمين الصندوق: '+(esc(e.by)||'..............')+'</span><span>المدير: ..............</span></div></div>';
+  document.body.classList.add('pv');window.print();
+}
+window.addEventListener('afterprint',()=>document.body.classList.remove('pv'));
+
+/* ---------- التقارير ---------- */
+function monthRange(off){const t=new Date(todayStr()+'T00:00:00');return [ymd(new Date(t.getFullYear(),t.getMonth()+off,1)),ymd(new Date(t.getFullYear(),t.getMonth()+off+1,0))]}
+async function loadReport(){
+  const f=curFund();if(!f||!can('reports'))return;
+  const from=$('#rFrom').value,to=$('#rTo').value;
+  if(!from||!to||from>to){R=null;renderReports();return}
+  const my=++reqR,all=rAll;rAll=false;
+  const r=await rpc('ledger',{fund:f.id,from:all?'1900-01-01':from,to:all?'2999-12-31':to});
+  if(my!==reqR)return;
+  let a=from,b=to;
+  if(all){const ds=r.entries.map(e=>e.date);a=ds.length?ds[0]:todayStr();b=ds.length?ds[ds.length-1]:todayStr();$('#rFrom').value=a;$('#rTo').value=b}
+  R={fund:f.id,from:a,to:b,opening:r.opening,entries:r.entries};
+  renderReports();
+}
+function renderReports(){
+  const f=curFund(),box=$('#rBody');if(!f)return;
+  if(!R||R.fund!==f.id){box.innerHTML='<div class="card empty">'+(R===null?'اختر فترة صحيحة (تاريخ البداية قبل النهاية)':'جارِ التحميل…')+'</div>';return}
+  const list=R.entries,s=sums(list),op=R.opening,cl=r2(op+s.in-s.out+s.z);
+  $('#rPrintHead').innerHTML='<h2>'+esc(S.company)+'</h2><div>تقرير '+esc(f.name)+' ('+esc(f.currency)+') من '+fmtDate(R.from)+' إلى '+fmtDate(R.to)+'</div>';
+  const days={};list.forEach(e=>{(days[e.date]=days[e.date]||[]).push(e)});
+  const showZ=s.z!==0;
+  let bal=op,rows='';
+  Object.keys(days).sort().forEach(d=>{
+    const x=sums(days[d]);bal=r2(bal+x.in-x.out+x.z);
+    rows+='<tr><td>'+fmtDate(d)+'</td><td>'+weekday(d)+'</td><td class="num in-c">'+fmt(x.in)+'</td><td class="num out-c">'+fmt(x.out)+'</td><td class="num">'+fmt(x.in-x.out)+'</td>'+(showZ?'<td class="num">'+(x.z?fmt(x.z):'')+'</td>':'')+'<td class="num"><b class="'+(bal<0?'neg':'')+'">'+fmt(bal)+'</b></td></tr>';
+  });
+  if(!rows)rows='<tr><td colspan="'+(showZ?7:6)+'" class="empty">لا توجد حركات في هذه الفترة</td></tr>';
+  const cat=t=>{
+    const m={};list.filter(e=>e.type===t&&e.kind!=='close').forEach(e=>{const k=e.cat||'بدون تصنيف';m[k]=r2((m[k]||0)+e.amount)});
+    const tot=t==='in'?s.in:s.out;
+    return Object.keys(m).sort((a,b)=>m[b]-m[a]).map(k=>'<tr><td>'+esc(k)+'</td><td class="num">'+fmt(m[k])+'</td><td class="num">'+(tot?Math.round(m[k]/tot*100):0)+'%</td></tr>').join('')||'<tr><td colspan="3" class="empty">—</td></tr>';
+  };
+  box.innerHTML='<div class="stats">'+stats(op,s.in,s.out,cl,'الرصيد في بداية الفترة','الرصيد في نهاية الفترة',s.z)+'</div>'+
+   '<div class="card"><div class="card-h"><h2>ملخص يومي — '+esc(f.name)+'</h2></div><div class="tw"><table><thead><tr><th>التاريخ</th><th>اليوم</th><th>مقبوضات</th><th>مدفوعات</th><th>الصافي</th>'+(showZ?'<th>تصفير</th>':'')+'<th>الرصيد الختامي</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+   '<div class="grid2"><div class="card"><div class="card-h"><h2>المقبوضات حسب التصنيف</h2></div><div class="tw"><table style="min-width:0"><thead><tr><th>التصنيف</th><th>المبلغ</th><th>النسبة</th></tr></thead><tbody>'+cat('in')+'</tbody></table></div></div>'+
+   '<div class="card"><div class="card-h"><h2>المدفوعات حسب التصنيف</h2></div><div class="tw"><table style="min-width:0"><thead><tr><th>التصنيف</th><th>المبلغ</th><th>النسبة</th></tr></thead><tbody>'+cat('out')+'</tbody></table></div></div></div>'+
+   '<div class="signs"><span>أمين الصندوق: ..............</span><span>المحاسب: ..............</span><span>المدير: ..............</span></div>';
+}
+
+/* ---------- الإعدادات ---------- */
+function catBox(t,title){
+  return '<div class="catbox"><h3>'+title+'</h3><div class="chips">'+((S.cats&&S.cats[t])||[]).map((c,i)=>'<span class="chip">'+esc(c)+'<button type="button" data-del="'+t+':'+i+'" title="حذف">×</button></span>').join('')+'</div><div class="addrow"><input data-add="'+t+'" placeholder="تصنيف جديد"><button class="btn sm" type="button" data-addbtn="'+t+'">إضافة</button></div></div>';
+}
+function renderCats(){$('#catArea').innerHTML=catBox('in','تصنيفات المقبوضات')+catBox('out','تصنيفات المدفوعات')}
+function renderFundsTable(){
+  $('#fBody').innerHTML=S.funds.map(f=>
+    '<tr><td><b>'+esc(f.name)+'</b></td><td>'+esc(f.currency)+'</td><td class="num">'+fmt(f.opening)+'</td>'+
+    '<td class="num"><b class="'+(f.balance<0?'neg':'')+'">'+fmt(f.balance)+'</b></td><td class="num">'+f.count+'</td>'+
+    '<td>'+(f.active?'<span class="tag on">مفعّل</span>':'<span class="tag off">موقوف</span>')+'</td>'+
+    '<td class="rowact"><button class="btn sm" type="button" data-fact="edit" data-id="'+f.id+'">تعديل</button>'+
+    '<button class="btn sm warn" type="button" data-fact="close" data-id="'+f.id+'">تصفير الرصيد</button>'+
+    '<button class="btn sm danger" type="button" data-fact="wipe" data-id="'+f.id+'">حذف كل السندات</button>'+
+    '<button class="btn sm danger" type="button" data-fact="del" data-id="'+f.id+'">حذف الصندوق</button></td></tr>'
+  ).join('')||'<tr><td colspan="7" class="empty">لا توجد صناديق</td></tr>';
+  const keep=$('#dFund').value;
+  $('#dFund').innerHTML=S.funds.map(f=>'<option value="'+f.id+'">'+esc(f.name)+' ('+esc(f.currency)+')</option>').join('');
+  if(keep&&S.funds.some(f=>f.id===keep))$('#dFund').value=keep;
+}
+async function renderSettings(){
+  if(!isAdmin())return;
+  $('#sCo').value=S.company;
+  const tzs=TZS.indexOf(S.tz)<0?[S.tz].concat(TZS):TZS;
+  $('#sTz').innerHTML=tzs.map(z=>'<option>'+esc(z)+'</option>').join('');$('#sTz').value=S.tz;
+  renderFundsTable();renderCats();renderUsers();renderAudit();
+  const [u,a]=await Promise.all([rpc('list_users'),rpc('audit_list')]);
+  USERS=u;AUDIT=a;renderUsers();renderAudit();
+}
+async function saveSettings(){
+  await rpc('save_settings',{company:$('#sCo').value,tz:$('#sTz').value,cats:S.cats});
+  await loadBoot();$('#coName').textContent=S.company;document.title=S.company+' — يومية الصندوق';
+  renderCats();toast('تم حفظ الإعدادات ✔');
+}
+function renderAudit(){
+  $('#aBody').innerHTML=AUDIT.map(a=>{
+    const d=new Date(a.at);
+    return '<tr><td class="num">'+esc(d.toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'}))+'</td><td>'+esc(a.user)+'</td><td><b>'+esc(a.action)+'</b></td><td>'+esc(a.fund)+'</td><td>'+esc(a.detail)+'</td></tr>';
+  }).join('')||'<tr><td colspan="5" class="empty">لا توجد عمليات مسجلة</td></tr>';
+}
+
+/* ---------- الصناديق ---------- */
+function openFundModal(id){
+  const f=id?S.funds.find(x=>x.id===id):null;
+  $('#fmTitle').textContent=f?'تعديل الصندوق':'صندوق جديد';
+  $('#fmId').value=f?f.id:'';$('#fmName').value=f?f.name:'';$('#fmCur').value=f?f.currency:'';
+  $('#fmOpen').value=f?f.opening:0;$('#fmSort').value=f?f.sort:'';$('#fmActive').checked=f?f.active:true;
+  showM('#fundModal');setTimeout(()=>$('#fmName').focus(),30);
+}
+async function saveFund(){
+  const name=$('#fmName').value.trim(),cur=$('#fmCur').value.trim(),op=parseAmt($('#fmOpen').value||'0'),srt=parseInt($('#fmSort').value||'0',10);
+  if(!name){toast('اكتب اسم الصندوق','err');return}
+  if(!cur){toast('اكتب العملة','err');return}
+  if(isNaN(op)){toast('الرصيد الافتتاحي غير صحيح','err');return}
+  $('#fmSave').disabled=true;
+  try{
+    await rpc('save_fund',{id:$('#fmId').value,name:name,currency:cur,opening:op,sort:isNaN(srt)?0:srt,active:$('#fmActive').checked});
+    hideM('#fundModal');await reload();toast('تم حفظ الصندوق ✔');
+  }finally{$('#fmSave').disabled=false}
+}
+function openCloseModal(id){
+  const f=S.funds.find(x=>x.id===id);if(!f)return;
+  $('#cmId').value=id;$('#cmDate').value=todayStr();$('#cmDate').max=todayStr();$('#cmNote').value='';
+  $('#cmInfo').innerHTML='الصندوق: <b>'+esc(f.name)+'</b><br>الرصيد الحالي: '+money(f.balance,f.currency);
+  showM('#closeModal');
+}
+async function closeFund(){
+  const id=$('#cmId').value,f=S.funds.find(x=>x.id===id);if(!f)return;
+  if(!confirm('سيتم تصفير رصيد «'+f.name+'» بتاريخ '+fmtDate($('#cmDate').value)+'. متابعة؟'))return;
+  $('#cmSave').disabled=true;
+  try{
+    const r=await rpc('close_fund',{fund:id,date:$('#cmDate').value,note:$('#cmNote').value});
+    hideM('#closeModal');await reload();toast('تم التصفير (الرصيد السابق '+fmt(r.balance)+' '+f.currency+') ✔');
+  }finally{$('#cmSave').disabled=false}
+}
+async function wipeFund(id){
+  const f=S.funds.find(x=>x.id===id);if(!f)return;
+  if(!confirm('سيتم حذف كل سندات «'+f.name+'» ('+f.count+' سند) نهائياً وإعادة الترقيم من البداية. هل أنت متأكد؟'))return;
+  const nm=prompt('للتأكيد اكتب اسم الصندوق تماماً:\n'+f.name);
+  if(nm===null)return;
+  if(nm.trim()!==f.name){toast('الاسم غير مطابق، لم يُحذف شيء','err');return}
+  const ro=confirm('هل تريد أيضاً تصفير الرصيد الافتتاحي لهذا الصندوق؟\n(موافق = يصبح صفراً، إلغاء = يبقى كما هو)');
+  const r=await rpc('wipe_fund',{fund:id,confirm_name:nm.trim(),reset_opening:ro});
+  L=null;R=null;await reload();toast('تم حذف '+r.deleted+' سند');
+}
+async function deleteFund(id){
+  const f=S.funds.find(x=>x.id===id);if(!f)return;
+  if(!confirm('حذف الصندوق «'+f.name+'» نهائياً؟'))return;
+  await rpc('delete_fund',{id:id});await reload();toast('تم حذف الصندوق');
+}
+
+/* ---------- المستخدمون ---------- */
+function renderUsers(){
+  const fname=id=>{const f=S.funds.find(x=>x.id===id);return f?f.name:null};
+  $('#uBody').innerHTML=USERS.map(u=>{
+    const me=u.id===S.me.id;
+    const pl=u.role==='admin'?'<span class="tag adm">كل الصلاحيات</span>':
+      (PERMS.filter(p=>u.perms[p[0]]).map(p=>'<span class="tag">'+esc(p[2])+'</span>').join(' ')||'<span class="mut">عرض اليوم فقط</span>');
+    const fl=u.role==='admin'?'<span class="tag adm">الكل</span>':
+      (u.funds.map(fname).filter(Boolean).map(n=>'<span class="tag">'+esc(n)+'</span>').join(' ')||'<span class="mut">لا شيء</span>');
+    return '<tr><td><b>'+esc(u.name)+'</b>'+(me?' <span class="tag on">أنت</span>':'')+'</td>'+
+      '<td class="num">'+esc(u.username)+'</td>'+
+      '<td>'+(u.role==='admin'?'<span class="tag adm">مدير</span>':'موظف')+'</td>'+
+      '<td>'+(u.active?'<span class="tag on">مفعّل</span>':'<span class="tag off">موقوف</span>')+'</td>'+
+      '<td>'+fl+'</td><td>'+pl+'</td>'+
+      '<td class="rowact"><button class="btn sm" type="button" data-uact="edit" data-id="'+u.id+'">تعديل</button>'+
+      (me?'':'<button class="btn sm" type="button" data-uact="toggle" data-id="'+u.id+'">'+(u.active?'إيقاف':'تفعيل')+'</button><button class="btn sm danger" type="button" data-uact="del" data-id="'+u.id+'">حذف</button>')+
+      '</td></tr>';
+  }).join('')||'<tr><td colspan="7" class="empty">لا يوجد مستخدمون</td></tr>';
+}
+function renderPermGrid(p){
+  $('#permGrid').innerHTML=PERMS.map(x=>'<label><input type="checkbox" data-perm="'+x[0]+'"'+(p&&p[x[0]]?' checked':'')+'> '+esc(x[1])+'</label>').join('');
+}
+function renderFundGrid(sel){
+  $('#uFundGrid').innerHTML=S.funds.map(f=>'<label><input type="checkbox" data-ufund="'+f.id+'"'+(sel.indexOf(f.id)>=0?' checked':'')+'> '+esc(f.name)+' ('+esc(f.currency)+')'+(f.active?'':' — موقوف')+'</label>').join('')||'<span class="mut">لا توجد صناديق</span>';
+}
+function togglePermWrap(){$('#permWrap').hidden=$('#uRole').value==='admin'}
+function openUserModal(id){
+  if(!isAdmin())return;
+  const u=id?USERS.find(x=>x.id===id):null;
+  $('#uTitle').textContent=u?'تعديل المستخدم':'مستخدم جديد';
+  $('#uId').value=u?u.id:'';
+  $('#uName').value=u?u.name:'';$('#uUser').value=u?u.username:'';$('#uPass').value='';
+  $('#uPassHint').textContent=u?'اتركها فارغة للإبقاء على كلمة المرور الحالية':'6 أحرف على الأقل';
+  $('#uRole').value=u?u.role:'emp';
+  $('#uActive').checked=u?u.active:true;
+  $('#uActive').disabled=!!(u&&u.id===S.me.id);
+  renderPermGrid(u?u.perms:PRESETS.cashier.p.reduce((o,k)=>{o[k]=true;return o},{}));
+  renderFundGrid(u?u.funds:S.funds.filter(f=>f.active).map(f=>f.id));
+  togglePermWrap();showM('#userModal');
+  setTimeout(()=>$('#uName').focus(),30);
+}
+async function saveUser(){
+  if(!isAdmin())return;
+  const id=$('#uId').value,name=$('#uName').value.trim(),un=$('#uUser').value.trim().toLowerCase(),pw=$('#uPass').value;
+  if(!name){toast('اكتب الاسم الكامل','err');return}
+  if(!/^\S{3,}$/.test(un)){toast('اسم المستخدم 3 أحرف على الأقل وبدون مسافات','err');return}
+  if(!id&&pw.length<6){toast('كلمة المرور 6 أحرف على الأقل','err');return}
+  if(id&&pw&&pw.length<6){toast('كلمة المرور 6 أحرف على الأقل','err');return}
+  const perms={};$$('#permGrid input[data-perm]').forEach(c=>{perms[c.dataset.perm]=c.checked});
+  const funds=$$('#uFundGrid input[data-ufund]').filter(c=>c.checked).map(c=>c.dataset.ufund);
+  $('#uSave').disabled=true;
+  try{
+    await rpc('save_user',{id:id,name:name,username:un,password:pw,role:$('#uRole').value,active:$('#uActive').checked,perms:perms,funds:funds});
+    hideM('#userModal');await reload();toast('تم حفظ المستخدم ✔');
+  }finally{$('#uSave').disabled=false}
+}
+async function userAction(act,id){
+  if(!isAdmin())return;
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  if(act==='edit'){openUserModal(id);return}
+  if(act==='toggle'){await rpc('set_user_active',{id:id,active:!u.active});await renderSettings();toast(u.active?'تم إيقاف الحساب':'تم تفعيل الحساب')}
+  else if(act==='del'){
+    if(!confirm('حذف المستخدم «'+u.name+'»؟ تبقى سنداته المسجلة كما هي.'))return;
+    await rpc('delete_user',{id:id});await renderSettings();toast('تم حذف المستخدم');
+  }
+}
+async function savePw(){
+  const o=$('#pOld').value,n=$('#pNew').value,n2=$('#pNew2').value;
+  if(n.length<6){toast('كلمة المرور الجديدة 6 أحرف على الأقل','err');return}
+  if(n!==n2){toast('تأكيد كلمة المرور غير مطابق','err');return}
+  await rpc('change_password',{old:o,new:n});hideM('#pwModal');toast('تم تغيير كلمة المرور ✔');
+}
+
+/* ---------- التصدير والنسخ الاحتياطي ---------- */
+function csv(rows){return '﻿'+rows.map(r=>r.map(c=>{c=String(c==null?'':c);return /[",\n\r]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')).join('\r\n')}
+function download(name,content,mime){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=name;
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},600);
+}
+function entryRows(list,op){
+  let bal=op;
+  const rows=[['التاريخ','رقم السند','النوع','البيان','الجهة','التصنيف','بواسطة','مقبوضات','مدفوعات','الرصيد']];
+  list.forEach(e=>{bal=r2(bal+(e.type==='in'?e.amount:-e.amount));rows.push([e.date,e.no,e.kind==='close'?'تصفير':(e.type==='in'?'قبض':'دفع'),e.desc,e.party,e.cat,e.by,e.type==='in'?e.amount:'',e.type==='out'?e.amount:'',bal])});
+  return rows;
+}
+async function fullLedger(fid){return rpc('ledger',{fund:fid,from:'1900-01-01',to:'2999-12-31'})}
+async function importOld(file){
+  const txt=await file.text();let d;
+  try{d=JSON.parse(txt)}catch(e){toast('الملف غير صالح','err');return}
+  if(!d||!Array.isArray(d.entries)){toast('الملف لا يشبه نسخة البرنامج القديم','err');return}
+  const fid=$('#dFund').value,f=S.funds.find(x=>x.id===fid);if(!f)return;
+  const ents=d.entries.filter(e=>e&&e.date&&(e.type==='in'||e.type==='out')&&Number(e.amount)>0)
+    .sort((a,b)=>(Number(a.seq)||0)-(Number(b.seq)||0))
+    .map(e=>({type:e.type,date:e.date,desc:e.desc||'',party:e.party||'',cat:e.cat||'',amount:Number(e.amount),no:e.no||''}));
+  const op=d.settings&&Number(d.settings.opening)>0?Number(d.settings.opening):0;
+  if(!ents.length){toast('لا توجد سندات صالحة في الملف','err');return}
+  if(!confirm('سيتم استيراد '+ents.length+' سند إلى «'+f.name+'»'+(op?' وجعل الرصيد الافتتاحي '+fmt(op)+' '+f.currency:'')+'. متابعة؟'))return;
+  const r=await rpc('import_entries',{fund:fid,entries:ents,set_opening:op>0,opening:op});
+  await reload();toast('تم استيراد '+r.imported+' سند'+(r.skipped?' (تم تخطي '+r.skipped+')':'')+' ✔');
+}
+
+/* ---------- الأحداث ---------- */
+function init(){
+  $('#authForm').onsubmit=authSubmit;
+  $('#retry').onclick=()=>start();
+  $('#outBtn').onclick=logout;
+  $('#pwBtn').onclick=()=>{$('#pOld').value='';$('#pNew').value='';$('#pNew2').value='';showM('#pwModal');setTimeout(()=>$('#pOld').focus(),30)};
+  $('#pwForm').onsubmit=e=>{e.preventDefault();g(savePw)()};
+  $('#pCancel').onclick=()=>hideM('#pwModal');
+  $$('.modal').forEach(m=>m.addEventListener('mousedown',e=>{if(e.target===m)m.classList.remove('show')}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('.modal.show').forEach(m=>m.classList.remove('show'))});
+
+  $$('.tabs button').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;renderAll();window.scrollTo(0,0)});
+  $('#fundBar').onclick=e=>{
+    const b=e.target.closest('button[data-fund]');if(!b||b.dataset.fund===state.fund)return;
+    if(state.editId)resetForm();
+    state.fund=b.dataset.fund;state.q='';$('#q').value='';L=null;R=null;
+    renderAll();
+  };
+  $('#prevDay').onclick=()=>gotoDate(addDays(state.date,-1));
+  $('#nextDay').onclick=()=>gotoDate(addDays(state.date,1));
+  $('#todayBtn').onclick=()=>gotoDate(todayStr());
+  $('#dateInput').onchange=e=>{if(e.target.value)gotoDate(e.target.value)};
+  $$('#typeSeg button').forEach(b=>b.onclick=()=>{
+    const t=b.dataset.t;
+    if(!(can('add_'+t)||(state.editId&&state.editType===t)))return;
+    const keep=$('#fCat').value;setType(t);if(state.editId)fillCats(keep);
+  });
+  const quick=t=>{
+    if(!can('add_'+t))return;
+    if(state.editId)resetForm();
+    setType(t);$('#formCard').scrollIntoView({behavior:'smooth',block:'center'});$('#fDesc').focus();
+  };
+  $('#newIn').onclick=()=>quick('in');
+  $('#newOut').onclick=()=>quick('out');
+  $('#formCard').onsubmit=e=>{e.preventDefault();saveEntry()};
+  $('#fCancel').onclick=()=>{resetForm();setType(state.type);applyPerms()};
+  $('#q').oninput=e=>{state.q=e.target.value;renderDaily()};
+  $('#dBody').onclick=e=>{
+    const b=e.target.closest('button[data-act]');if(!b)return;
+    const a=b.dataset.act,id=b.dataset.id;
+    if(a==='edit')startEdit(id);else if(a==='del')g(delEntry)(id);else printVoucher(id);
+  };
+  $('#dPrint').onclick=()=>{if(can('print'))window.print()};
+  $('#dCsv').onclick=()=>{if(!can('export')||!L)return;const f=curFund();download('يومية-'+f.name+'-'+state.date+'.csv',csv(entryRows(L.entries,L.opening)),'text/csv;charset=utf-8')};
+
+  // التقارير
+  const setRange=(a,b)=>{$('#rFrom').value=a;$('#rTo').value=b;g(loadReport)()};
+  $$('[data-q]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.q,t=new Date(todayStr()+'T00:00:00');
+    if(k==='month')setRange(...monthRange(0));
+    else if(k==='last')setRange(...monthRange(-1));
+    else if(k==='year')setRange(t.getFullYear()+'-01-01',t.getFullYear()+'-12-31');
+    else{rAll=true;$('#rFrom').value='1900-01-01';$('#rTo').value='2999-12-31';g(loadReport)()}
+  });
+  $('#rFrom').onchange=()=>g(loadReport)();$('#rTo').onchange=()=>g(loadReport)();
+  $('#rPrint').onclick=()=>{if(can('print'))window.print()};
+  $('#rCsv').onclick=()=>{if(!can('export')||!R)return;const f=curFund();download('تقرير-'+f.name+'-'+R.from+'-إلى-'+R.to+'.csv',csv(entryRows(R.entries,R.opening)),'text/csv;charset=utf-8')};
+  const mr=monthRange(0);$('#rFrom').value=mr[0];$('#rTo').value=mr[1];
+
+  // الإعدادات
+  $('#sCo').onchange=g(saveSettings);$('#sTz').onchange=g(saveSettings);
+  const addCat=async t=>{
+    if(!isAdmin())return;
+    const inp=document.querySelector('input[data-add="'+t+'"]'),v=inp.value.trim();if(!v)return;
+    if(S.cats[t].indexOf(v)<0)S.cats[t].push(v);
+    await saveSettings();document.querySelector('input[data-add="'+t+'"]').focus();
+  };
+  $('#catArea').onclick=g(async e=>{
+    if(!isAdmin())return;
+    const d=e.target.closest('button[data-del]'),a=e.target.closest('button[data-addbtn]');
+    if(d){const p=d.dataset.del.split(':');S.cats[p[0]].splice(Number(p[1]),1);await saveSettings()}
+    else if(a)await addCat(a.dataset.addbtn);
+  });
+  $('#catArea').onkeydown=g(async e=>{if(e.key==='Enter'&&e.target.dataset.add){e.preventDefault();await addCat(e.target.dataset.add)}});
+
+  // الصناديق
+  $('#fAdd').onclick=()=>openFundModal('');
+  $('#fmCancel').onclick=()=>hideM('#fundModal');
+  $('#fundForm').onsubmit=e=>{e.preventDefault();g(saveFund)()};
+  $('#cmCancel').onclick=()=>hideM('#closeModal');
+  $('#closeForm').onsubmit=e=>{e.preventDefault();g(closeFund)()};
+  $('#fBody').onclick=e=>{
+    const b=e.target.closest('button[data-fact]');if(!b||!isAdmin())return;
+    const a=b.dataset.fact,id=b.dataset.id;
+    if(a==='edit')openFundModal(id);else if(a==='close')openCloseModal(id);
+    else if(a==='wipe')g(wipeFund)(id);else if(a==='del')g(deleteFund)(id);
+  };
+
+  // المستخدمون
+  $('#presets').innerHTML=Object.keys(PRESETS).map(k=>'<button type="button" class="btn sm" data-preset="'+k+'">'+PRESETS[k].label+'</button>').join('');
+  $('#presets').onclick=e=>{
+    const b=e.target.closest('button[data-preset]');if(!b)return;
+    const set=PRESETS[b.dataset.preset].p;
+    $$('#permGrid input[data-perm]').forEach(c=>{c.checked=set.indexOf(c.dataset.perm)>=0});
+  };
+  $('#uRole').onchange=togglePermWrap;
+  $('#uAdd').onclick=()=>openUserModal('');
+  $('#uCancel').onclick=()=>hideM('#userModal');
+  $('#userForm').onsubmit=e=>{e.preventDefault();g(saveUser)()};
+  $('#uBody').onclick=e=>{const b=e.target.closest('button[data-uact]');if(b)g(userAction)(b.dataset.uact,b.dataset.id)};
+
+  // البيانات
+  $('#allCsv').onclick=g(async()=>{
+    if(!isAdmin())return;const f=S.funds.find(x=>x.id===$('#dFund').value);if(!f)return;
+    const r=await fullLedger(f.id);download('كل-حركات-'+f.name+'.csv',csv(entryRows(r.entries,r.opening)),'text/csv;charset=utf-8');
+  });
+  $('#bkExport').onclick=g(async()=>{
+    if(!isAdmin())return;
+    const out={version:2,exported:new Date().toISOString(),company:S.company,funds:[]};
+    for(const f of S.funds){const r=await fullLedger(f.id);out.funds.push({name:f.name,currency:f.currency,opening:f.opening,active:f.active,entries:r.entries})}
+    download('نسخة-الصندوق-'+todayStr()+'.json',JSON.stringify(out,null,1),'application/json');
+  });
+  $('#impBtn').onclick=()=>{if(isAdmin())$('#impFile').click()};
+  $('#impFile').onchange=g(async e=>{
+    const f=e.target.files[0];e.target.value='';if(!f||!isAdmin())return;
+    await importOld(f);
+  });
+}
+
+async function start(){
+  if(!CFG.url||!CFG.key||/YOUR-/.test(CFG.url+CFG.key)){setView('config');return}
+  setView('splash');$('#splashMsg').textContent='جارِ التحميل…';$('#retry').hidden=true;
+  sid=getSid();
+  if(sid){
+    try{
+      await loadBoot(true);
+      state.tab='daily';state.date=S.today;L=null;R=null;
+      setView('app');setType(defType());resetForm();await renderAll();return;
+    }catch(e){
+      if(e.status===401){sid='';clearSid();S=null}
+      else{setView('splash');$('#splashMsg').textContent=e.message;$('#retry').hidden=false;return}
+    }
+  }
+  await initAuth();
+}
+init();
+start();
+})();
+</script>
+</body>
+</html>
